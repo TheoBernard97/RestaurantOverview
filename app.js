@@ -64,14 +64,29 @@ function initMap() {
     addRestaurants();
   }
 
+  // Add restaurants from JSON data
   function addRestaurants (){
-    // Add restaurants from JSON data
     data.forEach((restaurant) => {
-      
-      addMarker({
+
+      const name = restaurant.restaurantName;
+      const coords = {
         lat: restaurant.lat,
         lng: restaurant.long,
-      }, restaurant.restaurantName);
+      };
+
+      addMarker(coords, name);
+      
+      let score = 0;
+      restaurant.ratings.forEach(rating => {
+        score = score + rating.stars;
+      });
+      const average = score / restaurant.ratings.length;
+
+      let list = document.getElementById("list");
+      let div = document.createElement("div");
+      div.innerHTML = "<h3>" + name + "</h3>" + "<p>Note : " + average + "</p>"
+
+      list.appendChild(div);
     });
   }
 
