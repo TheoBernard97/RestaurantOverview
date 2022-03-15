@@ -13,7 +13,7 @@ fetch("./data.json")
     );
   });
 
-var map;
+let map;
 
 function initMap() {
   const paris = { lat: 48.856614, lng: 2.3522219 };
@@ -52,40 +52,41 @@ function initMap() {
       lng: newLongitude,
     };
 
-    this.map = displayMap();
+    displayMap();
 
     let userMarker = new google.maps.Marker({
       position: mapOptions.center,
       map: this.map,
       icon: "https://developers.google.com/maps/documentation/javascript/examples/full/images/beachflag.png",
+      title: "User"
+    });
+
+    addRestaurants();
+  }
+
+  function addRestaurants (){
+    // Add restaurants from JSON data
+    data.forEach((restaurant) => {
+      
+      addMarker({
+        lat: restaurant.lat,
+        lng: restaurant.long,
+      }, restaurant.restaurantName);
     });
   }
 
   // Add marker
-  function addMarker(coords) {
+  function addMarker(coords, name) {
     let marker = new google.maps.Marker({
       position: coords,
-      setMap: this.map,
-      icon: "https://developers.google.com/maps/documentation/javascript/examples/full/images/beachflag.png",
+      title: name
     });
-  
-    console.log("Add marker at");
-    console.log(coords);
+
+    marker.setMap(this.map)
   } 
 
-  // Add restaurants from JSON data
-  data.forEach((restaurant) => {
-    
-    addMarker({
-      lat: restaurant.lat,
-      lng: restaurant.long,
-    });
-  });
-
   function displayMap() {
-    var map = new google.maps.Map(mapDiv, mapOptions);
-
-    return map;
+    this.map = new google.maps.Map(mapDiv, mapOptions);
   }
 }
 
