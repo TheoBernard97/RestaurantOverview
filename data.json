@@ -30,5 +30,21 @@
         "comment": "J'ai trouvé ça correct, sans plus"
       }
     ]
+  },
+  {
+    "restaurantName": "La Tarantella",
+    "address": "15 Rue Baratte Cholet, 94100 Saint-Maur-des-Fossés",
+    "lat": 48.7964465,
+    "long": 2.4859579,
+    "ratings": [
+      {
+        "stars": 4,
+        "comment": "Un très bon restaurant italien !"
+      },
+      {
+        "stars": 5,
+        "comment": "Excelent"
+      }
+    ]
   }
 ]
