@@ -14,6 +14,8 @@ fetch("./data.json")
   });
 
 let map;
+let markers = [];
+let restaurants = [];
 
 function initMap() {
   const paris = { lat: 48.856614, lng: 2.3522219 };
@@ -66,7 +68,9 @@ function initMap() {
 
   // Add restaurants from JSON data
   function addRestaurants (){
-    data.forEach((restaurant) => {
+    data.forEach((restaurant, index) => {
+
+      restaurants.push(restaurant);
 
       const name = restaurant.restaurantName;
       const coords = {
@@ -74,7 +78,9 @@ function initMap() {
         lng: restaurant.long,
       };
 
-      addMarker(coords, name);
+      addMarker(coords, name, index);
+
+      // console.log(markers);
       
       let score = 0;
       restaurant.ratings.forEach(rating => {
@@ -91,15 +97,41 @@ function initMap() {
   }
 
   // Add marker
-  function addMarker(coords, name) {
+  function addMarker(coords, name, index) {
     let marker = new google.maps.Marker({
       position: coords,
       title: name
     });
 
     marker.setMap(this.map)
+
+    markers.push(marker);
+    
+    google.maps.event.addListener(marker, 'click', (function(marker, index) {
+      return function() {
+        list.style.display = "none";      
+        openOverview(restaurants[index]);
+      }
+    })(marker, index));
   } 
 
+  // Open Overview
+  function openOverview(restaurant) {
+    let overview = document.getElementById("overview");
+    let name = document.getElementById("overview-name");
+    // let ratings = document.getElementById("overview-ratings");
+
+    name.innerHTML = restaurant.restaurantName;
+    
+    overview.style.display = "unset";
+  }
+
+  // Open Overview
+  function closeOverview() {
+    overview.style.display = "none";
+  }
+
+  // Display map
   function displayMap() {
     this.map = new google.maps.Map(mapDiv, mapOptions);
   }

@@ -22,6 +22,20 @@ body {
   padding: 0 10px;
 }
 
-.sidebar-title {
+#overview {
+  display: none;
+}
+
+.overview-title,
+.list-title {
   text-align: center;
+  margin: 1rem 0 0;
+}
+
+#list > div {
+  background-color: whitesmoke;
+  margin-top: 10px;
+  border: solid 1px black;
+  border-radius: 10px;
+  padding: 0 1rem;
 }
