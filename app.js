@@ -119,16 +119,30 @@ function initMap() {
   function openOverview(restaurant) {
     let overview = document.getElementById("overview");
     let name = document.getElementById("overview-name");
-    // let ratings = document.getElementById("overview-ratings");
-
+    let ratings = document.getElementById("overview-ratings");
+    
     name.innerHTML = restaurant.restaurantName;
+    ratings.innerHTML = "";
+
+    restaurant.ratings.forEach(rating => {
+      let ratingDiv = document.createElement("div");
+      let starsDiv = "<p>" + rating.stars + " ★</p>";
+      let commentDiv = "<p>" + rating.comment + "</p>";
+      
+      ratingDiv.innerHTML = starsDiv + commentDiv;
+      ratings.appendChild(ratingDiv);
+    });
     
     overview.style.display = "unset";
   }
 
-  // Open Overview
+  // Close Overview
   function closeOverview() {
+    let overview = document.getElementById("overview");
+    let ratings = document.getElementById("overview-ratings");
+
     overview.style.display = "none";
+    ratings.innerHTML = "";
   }
 
   // Display map
