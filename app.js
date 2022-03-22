@@ -9,13 +9,23 @@ fetch("./data.json")
   })
   .catch((error) => {
     console.log(
-      "Il y a eu un problème avec l'opération fetch: ${error.message}"
+      "Error: ${error.message}"
     );
   });
 
 let map;
 let markers = [];
 let restaurants = [];
+
+setupEventListeners();
+
+function setupEventListeners() {
+  document.addEventListener("click", (event) => {
+    if (event.target.classList.contains("close-overview")) {
+      closeOverview();
+    }
+  });
+}
 
 function initMap() {
   const paris = { lat: 48.856614, lng: 2.3522219 };
@@ -88,7 +98,6 @@ function initMap() {
       });
       const average = score / restaurant.ratings.length;
 
-      let list = document.getElementById("list");
       let div = document.createElement("div");
       div.innerHTML = "<h3>" + name + "</h3>" + "<p>Note : " + average + "</p>"
 
@@ -108,42 +117,11 @@ function initMap() {
     markers.push(marker);
     
     google.maps.event.addListener(marker, 'click', (function(marker, index) {
-      return function() {
-        list.style.display = "none";      
+      return function() {     
         openOverview(restaurants[index]);
       }
     })(marker, index));
   } 
-
-  // Open Overview
-  function openOverview(restaurant) {
-    let overview = document.getElementById("overview");
-    let name = document.getElementById("overview-name");
-    let ratings = document.getElementById("overview-ratings");
-    
-    name.innerHTML = restaurant.restaurantName;
-    ratings.innerHTML = "";
-
-    restaurant.ratings.forEach(rating => {
-      let ratingDiv = document.createElement("div");
-      let starsDiv = "<p>" + rating.stars + " ★</p>";
-      let commentDiv = "<p>" + rating.comment + "</p>";
-      
-      ratingDiv.innerHTML = starsDiv + commentDiv;
-      ratings.appendChild(ratingDiv);
-    });
-    
-    overview.style.display = "unset";
-  }
-
-  // Close Overview
-  function closeOverview() {
-    let overview = document.getElementById("overview");
-    let ratings = document.getElementById("overview-ratings");
-
-    overview.style.display = "none";
-    ratings.innerHTML = "";
-  }
 
   // Display map
   function displayMap() {
@@ -151,4 +129,37 @@ function initMap() {
   }
 }
 
+// Open Overview
+function openOverview(restaurant) {
+  let list = document.getElementById("list");
+  let overview = document.getElementById("overview");
+  let name = document.getElementById("overview-name");
+  let ratings = document.getElementById("overview-ratings");
+  
+  list.style.display = "none"; 
+  name.innerHTML = restaurant.restaurantName;
+  ratings.innerHTML = "";
+
+  restaurant.ratings.forEach(rating => {
+    let ratingDiv = document.createElement("div");
+    let starsDiv = "<p>" + rating.stars + " ★</p>";
+    let commentDiv = "<p>" + rating.comment + "</p>";
+    
+    ratingDiv.innerHTML = starsDiv + commentDiv;
+    ratings.appendChild(ratingDiv);
+  });
+  
+  overview.style.display = "unset";
+}
+
+// Close Overview
+function closeOverview() {
+  let list = document.getElementById("list");
+  let overview = document.getElementById("overview");
+  let ratings = document.getElementById("overview-ratings");
+
+  overview.style.display = "none";
+  ratings.innerHTML = "";
+  list.style.display = "unset";
+}
 
