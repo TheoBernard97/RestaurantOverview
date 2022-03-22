@@ -72,6 +72,12 @@ function initMap() {
       icon: "https://developers.google.com/maps/documentation/javascript/examples/full/images/beachflag.png",
       title: "User"
     });
+    
+    // Detect when the map viewport changes
+    google.maps.event.addListener(this.map, 'idle', () => {
+      console.log("Map moved");
+      updateDisplayedRestaurants();
+    });
 
     addRestaurants();
   }
@@ -90,8 +96,6 @@ function initMap() {
 
       addMarker(coords, name, index);
 
-      // console.log(markers);
-      
       let score = 0;
       restaurant.ratings.forEach(rating => {
         score = score + rating.stars;
@@ -163,3 +167,10 @@ function closeOverview() {
   list.style.display = "unset";
 }
 
+// Update Displayed Restaurants
+function updateDisplayedRestaurants() {
+  markers.forEach(marker => {
+    const markerIsVisible = this.map.getBounds().contains(marker.getPosition());
+    console.log(marker.title + " is visible: " + markerIsVisible);
+  })
+}
