@@ -75,7 +75,6 @@ function initMap() {
     
     // Detect when the map viewport changes
     google.maps.event.addListener(this.map, 'idle', () => {
-      console.log("Map moved");
       updateDisplayedRestaurants();
     });
 
@@ -103,7 +102,7 @@ function initMap() {
       restaurant.ratings.forEach(rating => {
         score = score + rating.stars;
       });
-      const average = score / restaurant.ratings.length;
+      const average = (score / restaurant.ratings.length).toFixed(1);;
 
       let div = document.createElement("div");
       div.classList.add(cssClass);
@@ -185,7 +184,6 @@ function updateRestaurantVisibility(isVisible, restaurantName) {
   restaurants.forEach(restaurant => {
     if (restaurant.restaurantName === restaurantName){
       restaurant.isVisible = isVisible;
-      console.log("Update", restaurant.restaurantName, "visibility to", restaurant.isVisible)
     }
   })
 }

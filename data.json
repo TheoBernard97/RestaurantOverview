@@ -38,12 +38,16 @@
     "long": 2.4859579,
     "ratings": [
       {
-        "stars": 4,
+        "stars": 5,
         "comment": "Un très bon restaurant italien !"
       },
       {
         "stars": 5,
-        "comment": "Excelent"
+        "comment": "Excellent"
+      },
+      {
+        "stars": 4,
+        "comment": "Bon restaurant"
       }
     ]
   }
