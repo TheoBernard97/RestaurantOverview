@@ -86,13 +86,16 @@ function initMap() {
   function addRestaurants (){
     data.forEach((restaurant, index) => {
 
-      restaurants.push(restaurant);
-
       const name = restaurant.restaurantName;
       const coords = {
         lat: restaurant.lat,
         lng: restaurant.long,
       };
+
+      const cssClass = name.split(' ').join('');
+
+      restaurant = {...restaurant, isVisible: true, cssClass : cssClass};
+      restaurants.push(restaurant);
 
       addMarker(coords, name, index);
 
@@ -103,7 +106,8 @@ function initMap() {
       const average = score / restaurant.ratings.length;
 
       let div = document.createElement("div");
-      div.innerHTML = "<h3>" + name + "</h3>" + "<p>Note : " + average + "</p>"
+      div.classList.add(cssClass);
+      div.innerHTML = "<h3>" + name + "</h3>" + "<p>" + average + " ★</p>";
 
       list.appendChild(div);
     });
@@ -164,13 +168,36 @@ function closeOverview() {
 
   overview.style.display = "none";
   ratings.innerHTML = "";
-  list.style.display = "unset";
+  list.style.display = "block";
 }
 
-// Update Displayed Restaurants
+// Update Displayed Restaurants 
 function updateDisplayedRestaurants() {
   markers.forEach(marker => {
     const markerIsVisible = this.map.getBounds().contains(marker.getPosition());
-    console.log(marker.title + " is visible: " + markerIsVisible);
+    updateRestaurantVisibility(markerIsVisible, marker.title);
+    updateRestaurantList();
+  })
+}
+
+// Update restaurant visiblity 
+function updateRestaurantVisibility(isVisible, restaurantName) {
+  restaurants.forEach(restaurant => {
+    if (restaurant.restaurantName === restaurantName){
+      restaurant.isVisible = isVisible;
+      console.log("Update", restaurant.restaurantName, "visibility to", restaurant.isVisible)
+    }
+  })
+}
+
+function updateRestaurantList() {
+  restaurants.forEach(restaurant => {
+    let div = document.getElementsByClassName(restaurant.cssClass)[0];
+    if (restaurant.isVisible){
+      div.style.display = "block";
+    }
+    else {
+      div.style.display = "none";
+    }
   })
 }
