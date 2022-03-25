@@ -141,12 +141,18 @@ function openOverview(restaurant) {
   let list = document.getElementById("list");
   let overview = document.getElementById("overview");
   let name = document.getElementById("overview-name");
+  let picture = document.getElementById("overview-picture");
   let ratings = document.getElementById("overview-ratings");
+
+  let streetView = "https://maps.googleapis.com/maps/api/streetview?size=350x200&location=" + restaurant.lat + "," + restaurant.long + "&pitch=0&key=AIzaSyCxNK2DHeJvw5M6BXbqvb4ZVKq9KnBRZVA";
   
   list.style.display = "none"; 
   name.innerHTML = restaurant.restaurantName;
+  picture.src = streetView;
+  picture.alt = restaurant.restaurantName;
   ratings.innerHTML = "";
 
+  // Add ratings
   restaurant.ratings.forEach(rating => {
     let ratingDiv = document.createElement("div");
     let starsDiv = "<p>" + rating.stars + " ★</p>";
@@ -188,6 +194,7 @@ function updateRestaurantVisibility(isVisible, restaurantName) {
   })
 }
 
+// Update restaurant list 
 function updateRestaurantList() {
   restaurants.forEach(restaurant => {
     let div = document.getElementsByClassName(restaurant.cssClass)[0];
