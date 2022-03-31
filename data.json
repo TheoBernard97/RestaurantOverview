@@ -50,5 +50,21 @@
         "comment": "Bon restaurant"
       }
     ]
+  },
+  {
+    "restaurantName": "Pizza Hut",
+    "address": "129 Bd Saint-Michel, 75005 Paris, France",
+    "lat": 48.84243543080656,
+    "long": 2.33831692876857,
+    "ratings": [
+      {
+        "stars": 2,
+        "comment": "Une très mauvais  pizzeria !"
+      },
+      {
+        "stars": 1,
+        "comment": "A peine commestible"
+      }
+    ]
   }
 ]

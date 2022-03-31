@@ -25,6 +25,12 @@ function setupEventListeners() {
       closeOverview();
     }
   });
+  
+  document.addEventListener("change", (event) => {
+    if (event.target.classList.contains("select-filter")) {
+      updateFilter();
+    }
+  });
 }
 
 function initMap() {
@@ -92,19 +98,20 @@ function initMap() {
       };
 
       const cssClass = name.split(' ').join('');
-
-      restaurant = {...restaurant, isVisible: true, cssClass : cssClass};
-      restaurants.push(restaurant);
-
-      addMarker(coords, name, index);
-
+      
       let score = 0;
       restaurant.ratings.forEach(rating => {
         score = score + rating.stars;
       });
       const average = (score / restaurant.ratings.length).toFixed(1);;
 
+      restaurant = {...restaurant, isVisible: true, cssClass : cssClass, averageRating : average};
+      restaurants.push(restaurant);
+
+      addMarker(coords, name, index);
+
       let div = document.createElement("div");
+      div.classList.add("restaurant-card");
       div.classList.add(cssClass);
       div.innerHTML = "<h3>" + name + "</h3>" + "<p>" + average + " ★</p>";
 
@@ -174,6 +181,26 @@ function closeOverview() {
   overview.style.display = "none";
   ratings.innerHTML = "";
   list.style.display = "block";
+}
+
+// Update Filter 
+function updateFilter(){
+  const lowest_rating = document.getElementById("lowest-rate").value;
+  const highest_rating = document.getElementById("highest-rate").value;
+  
+  restaurants.forEach(restaurant => {
+    console.log(restaurant.restaurantName, ":", restaurant.averageRating);
+    if (restaurant.averageRating >= lowest_rating && restaurant.averageRating <= highest_rating ){
+      console.log("In");
+      updateRestaurantVisibility(true, restaurant.restaurantName);
+    }
+    else {
+      console.log("Out");
+      updateRestaurantVisibility(false, restaurant.restaurantName);
+    }
+  })
+
+  updateDisplayedRestaurants();
 }
 
 // Update Displayed Restaurants 

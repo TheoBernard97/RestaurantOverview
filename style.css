@@ -33,7 +33,22 @@ body {
   margin: 1rem 0 0;
 }
 
-#list > div {
+.filter-container h3 {
+  margin: 0;
+}
+
+.filter {
+  display: flex;
+  flex-direction: row;
+}
+
+.select-filters {
+  display: flex;
+  align-items: center;
+  margin: 0 5px;
+}
+
+.restaurant-card {
   background-color: whitesmoke;
   margin-top: 10px;
   border: solid 1px black;
