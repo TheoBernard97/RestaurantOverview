@@ -196,26 +196,23 @@ function updateFilter(){
 function updateDisplayedMarkers() {
   markers.forEach(marker => {
     const markerIsVisible = this.map.getBounds().contains(marker.getPosition());
-    updateRestaurantVisibility(markerIsVisible, marker.title);
+    updateRestaurantVisibility(marker, markerIsVisible);
     updateRestaurantList();
   })
 }
 
 // Update restaurant visiblity 
-function updateRestaurantVisibility(isVisible, restaurantName) {
-  markers.forEach(marker => {
-    const restaurant = marker.restaurant;
-    if (restaurant.restaurantName === restaurantName){
-      if (restaurant.averageRating >= lowest_rating && restaurant.averageRating <= highest_rating ){
-        restaurant.isVisible = isVisible;
-        marker.setVisible(true);
-      }
-      else {
-        restaurant.isVisible = false;
-        marker.setVisible(false);
-      }
-    }
-  })
+function updateRestaurantVisibility(marker, markerIsVisible) {
+  const restaurant = marker.restaurant;
+
+  if (restaurant.averageRating >= lowest_rating && restaurant.averageRating <= highest_rating ){
+    restaurant.isVisible = markerIsVisible;
+    marker.setVisible(true);
+  }
+  else {
+    restaurant.isVisible = false;
+    marker.setVisible(false);
+  }
 }
 
 // Update restaurant list 
