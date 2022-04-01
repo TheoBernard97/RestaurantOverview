@@ -15,7 +15,8 @@ fetch("./data.json")
 
 let map;
 let markers = [];
-let restaurants = [];
+let lowest_rating = 1;
+let highest_rating = 5;
 
 setupEventListeners();
 
@@ -81,7 +82,7 @@ function initMap() {
     
     // Detect when the map viewport changes
     google.maps.event.addListener(this.map, 'idle', () => {
-      updateDisplayedRestaurants();
+      updateDisplayedMarkers();
     });
 
     addRestaurants();
@@ -106,9 +107,8 @@ function initMap() {
       const average = (score / restaurant.ratings.length).toFixed(1);;
 
       restaurant = {...restaurant, isVisible: true, cssClass : cssClass, averageRating : average};
-      restaurants.push(restaurant);
 
-      addMarker(coords, name, index);
+      addMarker(coords, name, index, restaurant);
 
       let div = document.createElement("div");
       div.classList.add("restaurant-card");
@@ -120,19 +120,20 @@ function initMap() {
   }
 
   // Add marker
-  function addMarker(coords, name, index) {
+  function addMarker(coords, name, index, restaurant) {
     let marker = new google.maps.Marker({
       position: coords,
-      title: name
+      title: name,
+      restaurant : restaurant
     });
 
     marker.setMap(this.map)
 
     markers.push(marker);
     
-    google.maps.event.addListener(marker, 'click', (function(marker, index) {
+    google.maps.event.addListener(marker, 'click', (function(marker) {
       return function() {     
-        openOverview(restaurants[index]);
+        openOverview(marker.restaurant);
       }
     })(marker, index));
   } 
@@ -185,26 +186,14 @@ function closeOverview() {
 
 // Update Filter 
 function updateFilter(){
-  const lowest_rating = document.getElementById("lowest-rate").value;
-  const highest_rating = document.getElementById("highest-rate").value;
-  
-  restaurants.forEach(restaurant => {
-    console.log(restaurant.restaurantName, ":", restaurant.averageRating);
-    if (restaurant.averageRating >= lowest_rating && restaurant.averageRating <= highest_rating ){
-      console.log("In");
-      updateRestaurantVisibility(true, restaurant.restaurantName);
-    }
-    else {
-      console.log("Out");
-      updateRestaurantVisibility(false, restaurant.restaurantName);
-    }
-  })
+  lowest_rating = parseInt(document.getElementById("lowest-rate").value);
+  highest_rating = parseInt(document.getElementById("highest-rate").value);
 
-  updateDisplayedRestaurants();
+  updateDisplayedMarkers();
 }
 
 // Update Displayed Restaurants 
-function updateDisplayedRestaurants() {
+function updateDisplayedMarkers() {
   markers.forEach(marker => {
     const markerIsVisible = this.map.getBounds().contains(marker.getPosition());
     updateRestaurantVisibility(markerIsVisible, marker.title);
@@ -214,16 +203,25 @@ function updateDisplayedRestaurants() {
 
 // Update restaurant visiblity 
 function updateRestaurantVisibility(isVisible, restaurantName) {
-  restaurants.forEach(restaurant => {
+  markers.forEach(marker => {
+    const restaurant = marker.restaurant;
     if (restaurant.restaurantName === restaurantName){
-      restaurant.isVisible = isVisible;
+      if (restaurant.averageRating >= lowest_rating && restaurant.averageRating <= highest_rating ){
+        restaurant.isVisible = isVisible;
+        marker.setVisible(true);
+      }
+      else {
+        restaurant.isVisible = false;
+        marker.setVisible(false);
+      }
     }
   })
 }
 
 // Update restaurant list 
 function updateRestaurantList() {
-  restaurants.forEach(restaurant => {
+  markers.forEach(marker => {
+    const restaurant = marker.restaurant;
     let div = document.getElementsByClassName(restaurant.cssClass)[0];
     if (restaurant.isVisible){
       div.style.display = "block";
