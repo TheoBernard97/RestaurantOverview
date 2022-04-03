@@ -15,6 +15,7 @@ fetch("./data.json")
 
 let map;
 let markers = [];
+let lastSelectedMarker = null;
 let lowest_rating = 1;
 let highest_rating = 5;
 
@@ -24,6 +25,12 @@ function setupEventListeners() {
   document.addEventListener("click", (event) => {
     if (event.target.classList.contains("close-overview")) {
       closeOverview();
+    }
+    if (event.target.classList.contains("add-rating")) {
+      openModal(event.target.className);
+    }
+    if (event.target.classList.contains("rating-confirmation-btn")) {
+      addRating();
     }
   });
   
@@ -85,6 +92,11 @@ function initMap() {
       updateDisplayedMarkers();
     });
 
+    // Detect when a user click on the map
+    google.maps.event.addListener(this.map, 'click', () => {
+      // Add restaurant
+    });
+
     addRestaurants();
   }
 
@@ -132,7 +144,8 @@ function initMap() {
     markers.push(marker);
     
     google.maps.event.addListener(marker, 'click', (function(marker) {
-      return function() {     
+      return function() {
+        lastSelectedMarker = marker; 
         openOverview(marker.restaurant);
       }
     })(marker, index));
@@ -215,6 +228,31 @@ function updateRestaurantVisibility(marker, markerIsVisible) {
   }
 }
 
+// Update Restaurants Data
+function updateDisplayedMarkers() {
+  // markers.forEach(marker => {
+  //   const restaurant = marker.restaurant;
+
+  //   let score = 0;
+  //   restaurant.ratings.forEach(rating => {
+  //     score = score + rating.stars;
+  //   });
+  //   const average = (score / restaurant.ratings.length).toFixed(1);;
+  //   const cssClass = name.split(' ').join('');
+
+  //   restaurant.averageRating = average;
+
+  //   list = "";
+    
+  //   let div = document.createElement("div");
+  //   div.classList.add("restaurant-card");
+  //   div.classList.add(cssClass);
+  //   div.innerHTML = "<h3>" + name + "</h3>" + "<p>" + average + " ★</p>";
+
+  //   list.appendChild(div);
+  // })
+}
+
 // Update restaurant list 
 function updateRestaurantList() {
   markers.forEach(marker => {
@@ -227,4 +265,38 @@ function updateRestaurantList() {
       div.style.display = "none";
     }
   })
+}
+
+// Open modal
+function openModal(target){
+  const modal = document.getElementById("modal");
+  modal.style.display = "block";
+
+  if (target === "add-rating"){
+    const ratingContent = document.getElementById("rating-content-container");
+    ratingContent.style.display = "block";
+  }
+}
+
+// Add a review to a restaurant
+function addRating(){
+  const modal = document.getElementById("modal");
+  const ratingContent = document.getElementById("rating-content-container");
+  const rating = parseInt(document.getElementById("select-rating").value);
+  const comment = document.getElementById("rating-comment").value;
+
+  console.log("Rating:", rating);
+  console.log("Comment:", comment);
+
+  console.log(lastSelectedMarker.restaurant.ratings);
+
+  lastSelectedMarker.restaurant.ratings.push(
+    {
+      "stars": rating,
+      "comment": comment
+    }
+  )
+  
+  modal.style.display = "none";
+  ratingContent.style.display = "block";
 }

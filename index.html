@@ -12,8 +12,29 @@
     <title>Restaurant Overview</title>
   </head>
   <body>
+    <div id="modal">
+      <div id="rating-content-container">
+        <div class="rating-content">
+          <div class="select-rating-container">
+            <label for="select-rating">Rating:</label>
+            <select id="select-rating" name="select-rating" class="select-rating" id="select-rating">
+              <option value="1" selected>1</option>
+              <option value="2">2</option>                    
+              <option value="3">3</option>                    
+              <option value="4">4</option>                    
+              <option value="5">5</option>
+            </select>
+          </div>
+          <label for="rating-comment">Comment review:</label>
+          <input type="text" maxlength="50" id="rating-comment">
+          <button class="rating-confirmation-btn">
+            Save
+          </button>
+        </div>
+      </div>
+    </div>
     <div id="app">
-      <div id="map"></div>
+      <div id="map" class="map"></div>
       <div id="sidebar">
         <div id="overview">
           <h2 class="overview-title">Overview</h2>
@@ -22,6 +43,9 @@
             <img src="" alt="" id="overview-picture">
             <div id="overview-ratings">
             </div>
+            <button class="add-rating">
+              Add a rating
+            </button>
             <button class="close-overview">
               Close Overview
             </button>

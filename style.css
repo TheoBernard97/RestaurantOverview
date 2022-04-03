@@ -6,6 +6,32 @@ body {
   font-family: "Roboto", sans-serif;
 }
 
+#modal {
+  display: none;
+  position: fixed; 
+  z-index: 1;
+  left: 0;
+  top: 0;
+  width: 100%;
+  height: 100%;
+  overflow: auto;
+}
+
+#rating-content-container {
+  display: none;
+  background-color: #fefefe;
+  margin: 15% auto; 
+  padding: 20px;
+  border: 1px solid #888;
+  border-radius: 10px;
+  width: 300px; 
+}
+
+.rating-content {
+  display: flex;
+  flex-direction: column;
+}
+
 #app {
   display: flex;
   flex-direction: row;
