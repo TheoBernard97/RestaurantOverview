@@ -244,6 +244,8 @@ function updateRestaurantData(marker) {
       });
   const average = (score / restaurant.ratings.length).toFixed(1);;
 
+  restaurant.averageRating = average;
+
   let div = document.getElementsByClassName(restaurant.restaurantName.split(' ').join(''))[0];
   div.innerHTML = "<h3>" + restaurant.restaurantName + "</h3>" + "<p>" + average + " ★</p>";
 
