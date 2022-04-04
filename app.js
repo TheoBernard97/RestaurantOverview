@@ -163,7 +163,6 @@ function openOverview(restaurant) {
   let overview = document.getElementById("overview");
   let name = document.getElementById("overview-name");
   let picture = document.getElementById("overview-picture");
-  let ratings = document.getElementById("overview-ratings");
 
   let streetView = "https://maps.googleapis.com/maps/api/streetview?size=350x200&location=" + restaurant.lat + "," + restaurant.long + "&pitch=0&key=AIzaSyCxNK2DHeJvw5M6BXbqvb4ZVKq9KnBRZVA";
   
@@ -171,9 +170,17 @@ function openOverview(restaurant) {
   name.innerHTML = restaurant.restaurantName;
   picture.src = streetView;
   picture.alt = restaurant.restaurantName;
-  ratings.innerHTML = "";
 
-  // Add ratings
+  displayRatings(restaurant);
+  
+  overview.style.display = "unset";
+}
+
+// Display ratings
+function displayRatings(restaurant){
+  let ratings = document.getElementById("overview-ratings");
+  ratings.innerHTML = "";
+  
   restaurant.ratings.forEach(rating => {
     let ratingDiv = document.createElement("div");
     let starsDiv = "<p>" + rating.stars + " ★</p>";
@@ -183,8 +190,7 @@ function openOverview(restaurant) {
     ratings.appendChild(ratingDiv);
   });
   
-  overview.style.display = "unset";
-}
+};
 
 // Close Overview
 function closeOverview() {
@@ -197,7 +203,7 @@ function closeOverview() {
   list.style.display = "block";
 }
 
-// Update Filter 
+// Filter update
 function updateFilter(){
   lowest_rating = parseInt(document.getElementById("lowest-rate").value);
   highest_rating = parseInt(document.getElementById("highest-rate").value);
@@ -214,7 +220,7 @@ function updateDisplayedMarkers() {
   })
 }
 
-// Update restaurant visiblity 
+// Update restaurant card visiblity 
 function updateRestaurantVisibility(marker, markerIsVisible) {
   const restaurant = marker.restaurant;
 
@@ -228,29 +234,20 @@ function updateRestaurantVisibility(marker, markerIsVisible) {
   }
 }
 
-// Update Restaurants Data
-function updateDisplayedMarkers() {
-  // markers.forEach(marker => {
-  //   const restaurant = marker.restaurant;
+// Update Restaurant Data
+function updateRestaurantData(marker) {    
+  let restaurant = marker.restaurant;
 
-  //   let score = 0;
-  //   restaurant.ratings.forEach(rating => {
-  //     score = score + rating.stars;
-  //   });
-  //   const average = (score / restaurant.ratings.length).toFixed(1);;
-  //   const cssClass = name.split(' ').join('');
+  let score = 0;
+      restaurant.ratings.forEach(rating => {
+        score = score + rating.stars;
+      });
+  const average = (score / restaurant.ratings.length).toFixed(1);;
 
-  //   restaurant.averageRating = average;
+  let div = document.getElementsByClassName(restaurant.restaurantName.split(' ').join(''))[0];
+  div.innerHTML = "<h3>" + restaurant.restaurantName + "</h3>" + "<p>" + average + " ★</p>";
 
-  //   list = "";
-    
-  //   let div = document.createElement("div");
-  //   div.classList.add("restaurant-card");
-  //   div.classList.add(cssClass);
-  //   div.innerHTML = "<h3>" + name + "</h3>" + "<p>" + average + " ★</p>";
-
-  //   list.appendChild(div);
-  // })
+  displayRatings(restaurant);
 }
 
 // Update restaurant list 
@@ -285,11 +282,6 @@ function addRating(){
   const rating = parseInt(document.getElementById("select-rating").value);
   const comment = document.getElementById("rating-comment").value;
 
-  console.log("Rating:", rating);
-  console.log("Comment:", comment);
-
-  console.log(lastSelectedMarker.restaurant.ratings);
-
   lastSelectedMarker.restaurant.ratings.push(
     {
       "stars": rating,
@@ -299,4 +291,6 @@ function addRating(){
   
   modal.style.display = "none";
   ratingContent.style.display = "block";
+
+  updateRestaurantData(lastSelectedMarker);
 }
