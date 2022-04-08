@@ -34,7 +34,7 @@ function setupEventListeners() {
       addRating();
     }
     if (event.target.classList.contains("new-restaurant-confirmation-btn")) {
-      addNewRestaurant();
+      addNewRestaurantOnClick();
     }
   });
   
@@ -110,32 +110,8 @@ function initMap() {
 
   // Add restaurants from JSON data
   function addRestaurants (){
-    data.forEach((restaurant, index) => {
-
-      const name = restaurant.restaurantName;
-      const coords = {
-        lat: restaurant.lat,
-        lng: restaurant.long,
-      };
-
-      const cssClass = name.split(' ').join('');
-      
-      let score = 0;
-      restaurant.ratings.forEach(rating => {
-        score = score + rating.stars;
-      });
-      const average = (score / restaurant.ratings.length).toFixed(1);;
-
-      restaurant = {...restaurant, isVisible: true, cssClass : cssClass, averageRating : average};
-
-      addMarker(coords, name, index, restaurant);
-
-      let div = document.createElement("div");
-      div.classList.add("restaurant-card");
-      div.classList.add(cssClass);
-      div.innerHTML = "<h3>" + name + "</h3>" + "<p>" + average + " ★</p>";
-
-      list.appendChild(div);
+    data.forEach((restaurant) => {
+      createRestaurantEntity(restaurant);
     });
   }
 
@@ -315,7 +291,7 @@ function addRating(){
 }
 
 // Add a new restaurant
-function addNewRestaurant(){
+function addNewRestaurantOnClick(){
   const modal = document.getElementById("modal");
   const restaurantName = document.getElementById("restaurant-name").value;
   const rating = parseInt(document.getElementById("new-restaurant-rating").value);
@@ -344,34 +320,41 @@ function addNewRestaurant(){
       ]
     }
 
-    console.log(restaurant);
+    createRestaurantEntity(restaurant);
 
     modal.style.display = "none";
-
-    const name = restaurant.restaurantName; 
-    const cssClass = name.split(' ').join('');
-    
-    let score = 0;
-    restaurant.ratings.forEach(rating => {
-      score = score + rating.stars;
-    });
-    const average = (score / restaurant.ratings.length).toFixed(1);;
-
-    restaurant = {...restaurant, isVisible: true, cssClass : cssClass, averageRating : average};
-    const index = markers.length;
-
-    addMarker(coords, name, index, restaurant);
-    
-    let div = document.createElement("div");
-    div.classList.add("restaurant-card");
-    div.classList.add(cssClass);
-    div.innerHTML = "<h3>" + name + "</h3>" + "<p>" + average + " ★</p>";
-
-    list.appendChild(div);
   })
   .catch((error) => {
     console.log(
       "Error:", error.message
     );
   });
+}
+
+function createRestaurantEntity(restaurant) {
+  const name = restaurant.restaurantName; 
+  const cssClass = name.split(' ').join('');
+  const coords = {
+    lat: restaurant.lat,
+    lng: restaurant.long,
+  };
+  let score = 0;
+  restaurant.ratings.forEach(rating => {
+    score = score + rating.stars;
+  });
+  const average = (score / restaurant.ratings.length).toFixed(1);;
+
+  restaurant = {...restaurant, isVisible: true, cssClass : cssClass, averageRating : average};
+  const index = markers.length;
+
+  addMarker(coords, name, index, restaurant);
+  
+  let div = document.createElement("div");
+  div.classList.add("restaurant-card");
+  div.classList.add(cssClass);
+  div.innerHTML = "<h3>" + name + "</h3>" + "<p>" + average + " ★</p>";
+
+  list.appendChild(div);
+
+  return restaurant;
 }
