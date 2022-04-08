@@ -290,7 +290,7 @@ function addRating(){
   updateRestaurantData(lastSelectedMarker);
 }
 
-// Add a new restaurant
+// Add a new restaurant onClick
 function addNewRestaurantOnClick(){
   const modal = document.getElementById("modal");
   const restaurantName = document.getElementById("restaurant-name").value;
@@ -299,7 +299,6 @@ function addNewRestaurantOnClick(){
   const coords = newRestaurantData.coords;
 
   // Fetch Adress
-
   fetch("https://maps.googleapis.com/maps/api/geocode/json?latlng=" + coords.lat + "," + coords.lng + "&key=AIzaSyCxNK2DHeJvw5M6BXbqvb4ZVKq9KnBRZVA")
   .then((response) => response.json())
   .then((json) => {
@@ -331,6 +330,7 @@ function addNewRestaurantOnClick(){
   });
 }
 
+// Create a new resturant entity
 function createRestaurantEntity(restaurant) {
   const name = restaurant.restaurantName; 
   const cssClass = name.split(' ').join('');
