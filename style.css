@@ -17,7 +17,7 @@ body {
   overflow: auto;
 }
 
-#rating-content-container {
+#rating-content-container, #new-restaurant-container {
   display: none;
   background-color: #fefefe;
   margin: 15% auto; 
@@ -27,7 +27,7 @@ body {
   width: 300px; 
 }
 
-.rating-content {
+.rating-content, .new-restaurant {
   display: flex;
   flex-direction: column;
 }

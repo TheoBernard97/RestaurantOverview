@@ -13,6 +13,27 @@
   </head>
   <body>
     <div id="modal">
+      <div id="new-restaurant-container">
+        <div class="new-restaurant">
+          <label for="restaurant-name">Restaurant name:</label>
+          <input type="text" maxlength="50" id="restaurant-name">
+          <div class="select-rating-container">
+            <label for="new-restaurant-rating">Rating:</label>
+            <select id="new-restaurant-rating" name="new-restaurant-rating" class="new-restaurant-rating" id="new-restaurant-rating">
+              <option value="1" selected>1</option>
+              <option value="2">2</option>                    
+              <option value="3">3</option>                    
+              <option value="4">4</option>                    
+              <option value="5">5</option>
+            </select>
+          </div>
+          <label for="new-restaurant-commment">Comment review:</label>
+          <input type="text" maxlength="50" id="new-restaurant-commment">
+          <button class="new-restaurant-confirmation-btn">
+            Save
+          </button>
+        </div>
+      </div>
       <div id="rating-content-container">
         <div class="rating-content">
           <div class="select-rating-container">
