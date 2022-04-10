@@ -39,6 +39,7 @@ body {
 
 #map {
   min-height: 100vh;
+  max-height: 100vh;
   width: 100%;
 }
 
@@ -46,7 +47,9 @@ body {
   min-width: 350px;
   max-width: 350px;
   min-height: 100vh;
+  max-height: 100vh;
   padding: 0 10px;
+  overflow-y: scroll;
 }
 
 #overview {

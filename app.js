@@ -14,11 +14,15 @@ fetch("./data.json")
   });
 
 let map;
+let service;
 let markers = [];
 let lastSelectedMarker = null;
 let lowest_rating = 1;
 let highest_rating = 5;
 let newRestaurantData = {};
+
+// Used to not loop trought an API call
+let loopProtection = false;
 
 setupEventListeners();
 
@@ -53,7 +57,8 @@ function initMap() {
 
   // Map options
   let mapOptions = {
-    zoom: 13,
+    zoom: 14,
+    minZoom: 13,
     center: defaultCenter,
   };
 
@@ -64,7 +69,7 @@ function initMap() {
     timeout: 27000,
   };
 
-  // Locate  user
+  // Locate user
   if (navigator.geolocation) {
     navigator.geolocation.getCurrentPosition((position) => {
       updatePosition(position.coords.latitude, position.coords.longitude),
@@ -94,6 +99,7 @@ function initMap() {
     // Detect when the map viewport changes
     google.maps.event.addListener(this.map, 'idle', () => {
       updateDisplayedMarkers();
+      getNearbyRestaurants(this.map.center.lat(), this.map.center.lng());
     });
 
     // Detect when a user click on the map
@@ -330,7 +336,7 @@ function addNewRestaurantOnClick(){
   });
 }
 
-// Create a new resturant entity
+// Create a new restaurant entity
 function createRestaurantEntity(restaurant) {
   const name = restaurant.restaurantName; 
   const cssClass = name.split(' ').join('');
@@ -357,4 +363,59 @@ function createRestaurantEntity(restaurant) {
   list.appendChild(div);
 
   return restaurant;
+}
+
+// Get the nearby restaurants from Google Places API
+function getNearbyRestaurants(lat, lng) {
+  // if (loopProtection) {
+  //   return;
+  // }
+  // loopProtection = true;
+
+  console.log("Call API");
+
+  let location = new google.maps.LatLng(lat,lng);
+  let service = new google.maps.places.PlacesService(this.map);
+  let request = {
+    location: location,
+    radius: '1500',
+    type: ['restaurant']
+  };
+
+  service.nearbySearch(request, callback);
+
+  function callback(results, status) {
+    if (status == google.maps.places.PlacesServiceStatus.OK) {
+      for (var i = 0; i < results.length; i++) {
+        let lat = results[i].geometry.location.lat();
+        let lng = results[i].geometry.location.lng();
+        let coords = {
+          lat,
+          lng
+        };
+        const cssClass = results[i].name.split(' ').join('');
+        let average = results[i].rating;
+
+        let restaurant = {
+          restaurantName: results[i].name,
+          address: results[i].vicinity,
+          lat : lat,
+          long : lng,
+          ratings: [],
+          averageRating: average,
+          cssClass : cssClass,
+          isVisible: true,
+        }
+
+        addMarker(coords, restaurant.restaurantName, markers.length, restaurant)
+
+        let div = document.createElement("div");
+        div.classList.add("restaurant-card");
+        div.classList.add(cssClass);
+        div.innerHTML = "<h3>" + restaurant.restaurantName + "</h3>" + "<p>" + average + " ★</p>";
+
+        list.appendChild(div);
+      }
+    }
+  }
 }
