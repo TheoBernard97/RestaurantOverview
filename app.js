@@ -22,7 +22,7 @@ let highest_rating = 5;
 let newRestaurantData = {};
 
 // Used to not loop trought an API call
-let loopProtection = false;
+// let loopProtection = false;
 
 setupEventListeners();
 
@@ -367,10 +367,6 @@ function createRestaurantEntity(restaurant) {
 
 // Get the nearby restaurants from Google Places API
 function getNearbyRestaurants(lat, lng) {
-  // if (loopProtection) {
-  //   return;
-  // }
-  // loopProtection = true;
 
   console.log("Call API");
 
@@ -387,35 +383,49 @@ function getNearbyRestaurants(lat, lng) {
   function callback(results, status) {
     if (status == google.maps.places.PlacesServiceStatus.OK) {
       for (var i = 0; i < results.length; i++) {
-        let lat = results[i].geometry.location.lat();
-        let lng = results[i].geometry.location.lng();
-        let coords = {
-          lat,
-          lng
-        };
-        const cssClass = results[i].name.split(' ').join('');
-        let average = results[i].rating;
-
-        let restaurant = {
-          restaurantName: results[i].name,
-          address: results[i].vicinity,
-          lat : lat,
-          long : lng,
-          ratings: [],
-          averageRating: average,
-          cssClass : cssClass,
-          isVisible: true,
+        let alreadyRegistered = checkIfAlreadyRegistered(results[i].name);
+        
+        if (!alreadyRegistered){
+          let lat = results[i].geometry.location.lat();
+          let lng = results[i].geometry.location.lng();
+          let coords = {
+            lat,
+            lng
+          };
+          const cssClass = results[i].name.split(' ').join('');
+          let average = results[i].rating;
+  
+          let restaurant = {
+            restaurantName: results[i].name,
+            address: results[i].vicinity,
+            lat : lat,
+            long : lng,
+            ratings: [],
+            averageRating: average,
+            cssClass : cssClass,
+            isVisible: true,
+          }
+  
+          addMarker(coords, restaurant.restaurantName, markers.length, restaurant)
+  
+          let div = document.createElement("div");
+          div.classList.add("restaurant-card");
+          div.classList.add(cssClass);
+          div.innerHTML = "<h3>" + restaurant.restaurantName + "</h3>" + "<p>" + average + " ★</p>";
+  
+          list.appendChild(div);
         }
-
-        addMarker(coords, restaurant.restaurantName, markers.length, restaurant)
-
-        let div = document.createElement("div");
-        div.classList.add("restaurant-card");
-        div.classList.add(cssClass);
-        div.innerHTML = "<h3>" + restaurant.restaurantName + "</h3>" + "<p>" + average + " ★</p>";
-
-        list.appendChild(div);
       }
     }
   }
+}
+
+// Check if a restaurant is already registered
+function checkIfAlreadyRegistered(restaurantName){
+  markers.forEach(marker => {
+    if (marker.restaurant.restaurantName === restaurantName){
+      return true;
+    }
+  });
+  return false;
 }
