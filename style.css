@@ -17,6 +17,12 @@ body {
   overflow: auto;
 }
 
+.btn-container {
+  display: flex;
+  margin-top: 0.5rem;
+  justify-content: space-between;
+}
+
 #rating-content-container, #new-restaurant-container {
   display: none;
   background-color: #fefefe;
@@ -56,6 +62,11 @@ body {
   display: none;
 }
 
+#overview-picture {
+  margin: auto;
+  width: 290;
+}
+
 .overview-title,
 .list-title {
   text-align: center;
@@ -77,10 +88,14 @@ body {
   margin: 0 5px;
 }
 
-.restaurant-card {
+.restaurant-card, .review-card {
   background-color: whitesmoke;
   margin-top: 10px;
   border: solid 1px black;
   border-radius: 10px;
   padding: 0 1rem;
+}
+
+.add-rating, .close-overview {
+  margin: 1rem auto;
 }

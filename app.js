@@ -34,6 +34,9 @@ function setupEventListeners() {
     if (event.target.classList.contains("add-rating")) {
       openModal(event.target.className);
     }
+    if (event.target.classList.contains("cancel-btn")) {
+      closeModal();
+    }
     if (event.target.classList.contains("rating-confirmation-btn")) {
       addRating();
     }
@@ -147,15 +150,18 @@ function addMarker(coords, name, index, restaurant) {
   })(marker, index));
 } 
 
-
 // Open Overview
 function openOverview(restaurant) {
+  if (restaurant.placeId && restaurant.ratings.length < 1 ){
+    getReviews(restaurant);
+  }
+
   let list = document.getElementById("list");
   let overview = document.getElementById("overview");
   let name = document.getElementById("overview-name");
   let picture = document.getElementById("overview-picture");
 
-  let streetView = "https://maps.googleapis.com/maps/api/streetview?size=350x200&location=" + restaurant.lat + "," + restaurant.long + "&pitch=0&key=AIzaSyCxNK2DHeJvw5M6BXbqvb4ZVKq9KnBRZVA";
+  let streetView = "https://maps.googleapis.com/maps/api/streetview?size=330x200&location=" + restaurant.lat + "," + restaurant.long + "&pitch=0&key=AIzaSyCxNK2DHeJvw5M6BXbqvb4ZVKq9KnBRZVA";
   
   list.style.display = "none"; 
   name.innerHTML = restaurant.restaurantName;
@@ -178,6 +184,7 @@ function displayRatings(restaurant){
     let commentDiv = "<p>" + rating.comment + "</p>";
     
     ratingDiv.innerHTML = starsDiv + commentDiv;
+    ratingDiv.classList.add("review-card");
     ratings.appendChild(ratingDiv);
   });
   
@@ -276,6 +283,10 @@ function openModal(target){
   }
 }
 
+function closeModal(){
+  modal.style.display = "none";
+}
+
 // Add a review to a restaurant
 function addRating(){
   const modal = document.getElementById("modal");
@@ -289,11 +300,9 @@ function addRating(){
       "comment": comment
     }
   )
-  
-  modal.style.display = "none";
-  ratingContent.style.display = "block";
 
   updateRestaurantData(lastSelectedMarker);
+  closeModal();
 }
 
 // Add a new restaurant onClick
@@ -322,12 +331,12 @@ function addNewRestaurantOnClick(){
           "stars": rating,
           "comment": comment
         }
-      ]
+      ],
+      placeId: null
     }
 
     createRestaurantEntity(restaurant);
-
-    modal.style.display = "none";
+    closeModal();
   })
   .catch((error) => {
     console.log(
@@ -350,7 +359,13 @@ function createRestaurantEntity(restaurant) {
   });
   const average = (score / restaurant.ratings.length).toFixed(1);;
 
-  restaurant = {...restaurant, isVisible: true, cssClass : cssClass, averageRating : average};
+  restaurant = {
+    ...restaurant, 
+    isVisible: true, 
+    cssClass : cssClass, 
+    averageRating : average,
+    placeId: null
+  };
   const index = markers.length;
 
   addMarker(coords, name, index, restaurant);
@@ -368,8 +383,6 @@ function createRestaurantEntity(restaurant) {
 // Get the nearby restaurants from Google Places API
 function getNearbyRestaurants(lat, lng) {
 
-  console.log("Call API");
-
   let location = new google.maps.LatLng(lat,lng);
   let service = new google.maps.places.PlacesService(this.map);
   let request = {
@@ -385,7 +398,7 @@ function getNearbyRestaurants(lat, lng) {
       for (var i = 0; i < results.length; i++) {
         let alreadyRegistered = checkIfAlreadyRegistered(results[i].name);
         
-        if (!alreadyRegistered){
+        if (!alreadyRegistered){          
           let lat = results[i].geometry.location.lat();
           let lng = results[i].geometry.location.lng();
           let coords = {
@@ -404,6 +417,7 @@ function getNearbyRestaurants(lat, lng) {
             averageRating: average,
             cssClass : cssClass,
             isVisible: true,
+            placeId: results[i].place_id
           }
   
           addMarker(coords, restaurant.restaurantName, markers.length, restaurant)
@@ -428,4 +442,33 @@ function checkIfAlreadyRegistered(restaurantName){
     }
   });
   return false;
+}
+
+// Get the comments from Google Places API 
+function getReviews(restaurant){
+  let request = {
+    placeId: restaurant.placeId,
+    fields: ['reviews']
+  };
+
+  service = new google.maps.places.PlacesService(this.map);
+  service.getDetails(request, callback);
+  
+  function callback(reviews, status) {
+    if (status == google.maps.places.PlacesServiceStatus.OK) {
+      console.log("Ratings received");
+      console.log(reviews.reviews);
+      // Put the ratings in restaurants datas
+
+      reviews.reviews.forEach( review => {
+        restaurant.ratings.push(
+          {
+            stars: review.rating,
+            comment: review.text
+          }
+        )
+      });
+    }
+    displayRatings(restaurant);
+  }
 }
