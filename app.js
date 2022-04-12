@@ -317,7 +317,6 @@ function addNewRestaurantOnClick(){
   fetch("https://maps.googleapis.com/maps/api/geocode/json?latlng=" + coords.lat + "," + coords.lng + "&key=AIzaSyCxNK2DHeJvw5M6BXbqvb4ZVKq9KnBRZVA")
   .then((response) => response.json())
   .then((json) => {
-    console.log(json);
     const adress = json.results[0].formatted_address;
     newRestaurantData = newRestaurantData = {...newRestaurantData, adress: adress};
 
@@ -456,10 +455,6 @@ function getReviews(restaurant){
   
   function callback(reviews, status) {
     if (status == google.maps.places.PlacesServiceStatus.OK) {
-      console.log("Ratings received");
-      console.log(reviews.reviews);
-      // Put the ratings in restaurants datas
-
       reviews.reviews.forEach( review => {
         restaurant.ratings.push(
           {
