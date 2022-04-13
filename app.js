@@ -21,9 +21,6 @@ let lowest_rating = 1;
 let highest_rating = 5;
 let newRestaurantData = {};
 
-// Used to not loop trought an API call
-// let loopProtection = false;
-
 setupEventListeners();
 
 function setupEventListeners() {
