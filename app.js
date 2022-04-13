@@ -105,8 +105,8 @@ function initMap() {
     
     // Detect when the map viewport changes
     google.maps.event.addListener(this.map, 'idle', () => {
-      updateDisplayedMarkers();
       getNearbyRestaurants(this.map.center.lat(), this.map.center.lng());
+      updateDisplayedMarkers();
     });
 
     // Detect when a user click on the map
@@ -218,8 +218,8 @@ function updateDisplayedMarkers() {
   markers.forEach(marker => {
     const markerIsVisible = this.map.getBounds().contains(marker.getPosition());
     updateRestaurantVisibility(marker, markerIsVisible);
-    updateRestaurantList();
   })
+  updateRestaurantList();
 }
 
 // Update restaurant card visiblity 
@@ -339,6 +339,7 @@ function addNewRestaurantOnClick(){
     }
 
     createRestaurantEntity(restaurant);
+    updateDisplayedMarkers();
     closeModal();
   })
   .catch((error) => {
@@ -434,6 +435,8 @@ function getNearbyRestaurants(lat, lng) {
         }
       }
     }
+    
+    updateDisplayedMarkers();
   }
 }
 
