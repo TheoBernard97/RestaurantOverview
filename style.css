@@ -96,6 +96,14 @@ body {
   padding: 0 1rem;
 }
 
+.restaurant-card {
+  cursor: pointer;
+}
+
+.restaurant-card:hover {
+  background-color: lightgray;
+}
+
 .add-rating, .close-overview {
   margin: 1rem auto;
 }
