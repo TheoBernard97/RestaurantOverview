@@ -34,8 +34,6 @@ The information will not be saved if you leave the page (they just remain in mem
 
 At the moment there are not many restaurants and not many reviews. Fortunately, Google Places offers an API to retrieve restaurants and reviews. Use it to display additional restaurants and reviews on your map! Here the documentation: [https://developers.google.com/places/](https://developers.google.com/places/)
 
-![https://user.oc-static.com/upload/2017/09/11/15051445963709_Screen%20Shot%202017-09-11%20at%205.34.49%20PM.png](https://user.oc -static.com/upload/2017/09/11/15051445963709_Screen%20Shot%202017-09-11%20at%205.34.49%20PM.png)
-
 You will use the search api to find restaurants in the displayed area.
 
 Read the documentation carefully to find out how to access Google Places data and do not hesitate to do as many Google searches as necessary when you encounter a problem.
