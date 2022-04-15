@@ -25,12 +25,10 @@ setupEventListeners();
 
 function setupEventListeners() {
   document.addEventListener("click", (event) => {
-    if (event.target.classList.contains("restaurant-card")) {
-      markers.forEach(marker => {
-        if(marker.restaurant.cssClass === event.target.classList[1]){
-          openOverview(marker.restaurant);
-        }
-      });
+    if (event.target.closest(".restaurant-card")) {
+      let element = event.target.closest(".restaurant-card");
+      const marker = markers.find(marker => marker.restaurant.cssClass === element.classList[1]);
+      openOverview(marker.restaurant);
     }
     if (event.target.classList.contains("close-overview")) {
       closeOverview();
