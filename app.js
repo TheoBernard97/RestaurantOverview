@@ -163,7 +163,7 @@ function openOverview(restaurant) {
   let name = document.getElementById("overview-name");
   let picture = document.getElementById("overview-picture");
 
-  let streetView = "https://maps.googleapis.com/maps/api/streetview?size=330x200&location=" + restaurant.lat + "," + restaurant.long + "&pitch=0&key=AIzaSyCxNK2DHeJvw5M6BXbqvb4ZVKq9KnBRZVA";
+  let streetView = "https://maps.googleapis.com/maps/api/streetview?size=330x200&location=" + restaurant.lat + "," + restaurant.long + "&pitch=0&key=GOOGLE_MAP_KEY";
   
   list.style.display = "none"; 
   name.innerHTML = restaurant.restaurantName;
@@ -316,7 +316,7 @@ function addNewRestaurantOnClick(){
   const coords = newRestaurantData.coords;
 
   // Fetch Adress
-  fetch("https://maps.googleapis.com/maps/api/geocode/json?latlng=" + coords.lat + "," + coords.lng + "&key=AIzaSyCxNK2DHeJvw5M6BXbqvb4ZVKq9KnBRZVA")
+  fetch("https://maps.googleapis.com/maps/api/geocode/json?latlng=" + coords.lat + "," + coords.lng + "&key=GOOGLE_MAP_KEY")
   .then((response) => response.json())
   .then((json) => {
     const adress = json.results[0].formatted_address;
